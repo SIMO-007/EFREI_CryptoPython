@@ -27,6 +27,9 @@ def encryptage(valeur):
     token = f.encrypt(valeur_bytes)  # Encrypt la valeur
     return f"Valeur encryptée : {token.decode()}"  # Retourne le token en str
 
+
+# EXO 1
+
 @app.route('/decrypt/<string:token>')
 def decryptage(token):
     try:
@@ -36,6 +39,8 @@ def decryptage(token):
         return f"Valeur décryptée : {decrypted}"
     except Exception as e:
         return f"Erreur lors du déchiffrement : {str(e)}"
+
+# EXO 2
 
 @app.route('/encrypt_custom')
 def encrypt_custom():
