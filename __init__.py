@@ -39,14 +39,8 @@ def decryptage(token):
 
 # EXO 2
 
-@app.route('/encrypt_custom')
-def encrypt_custom():
-    message = request.args.get('message')
-    user_key = request.args.get('key')
-
-    if not message or not user_key:
-        return "Erreur : veuillez fournir un message ET une clé dans l'URL.", 400
-
+@app.route('/encrypt_custom/<path:message>/<path:user_key>')
+def encrypt_custom(message, user_key):
     try:
         fernet = Fernet(user_key.encode())
         encrypted = fernet.encrypt(message.encode()).decode()
@@ -54,20 +48,16 @@ def encrypt_custom():
     except Exception as e:
         return f"Erreur lors du chiffrement : {str(e)}"
 
-@app.route('/decrypt_custom')
-def decrypt_custom():
-    token = request.args.get('token')
-    user_key = request.args.get('key')
 
-    if not token or not user_key:
-        return "Erreur : veuillez fournir un token ET une clé dans l'URL.", 400
-
+@app.route('/decrypt_custom/<path:token>/<path:user_key>')
+def decrypt_custom(token, user_key):
     try:
         fernet = Fernet(user_key.encode())
         decrypted = fernet.decrypt(token.encode()).decode()
         return f"Message déchiffré : {decrypted}"
     except Exception as e:
         return f"Erreur lors du déchiffrement : {str(e)}"
+
 
                                                                                                                                                      
 if __name__ == "__main__":
