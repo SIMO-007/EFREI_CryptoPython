@@ -37,41 +37,35 @@ def decryptage(token):
     except Exception as e:
         return f"Erreur lors du déchiffrement : {str(e)}"
 
-@app.route('/encrypt_personal', methods=['GET', 'POST'])
-def encrypt_personal():
-    if request.method == 'POST':
-        valeur = request.form['valeur']
-        user_key = request.form['key']
+@app.route('/encrypt_custom')
+def encrypt_custom():
+    message = request.args.get('message')
+    user_key = request.args.get('key')
 
-        try:
-            # Valider et convertir la clé saisie
-            key_bytes = base64.urlsafe_b64decode(user_key.encode())
-            f = Fernet(base64.urlsafe_b64encode(key_bytes))
-            token = f.encrypt(valeur.encode())
-            return f"Texte chiffré : {token.decode()}"
-        except Exception as e:
-            return f"Erreur : clé invalide ou autre problème ({str(e)})"
+    if not message or not user_key:
+        return "Erreur : veuillez fournir un message ET une clé dans l'URL.", 400
 
-    return render_template('encrypt_form.html')
+    try:
+        fernet = Fernet(user_key.encode())
+        encrypted = fernet.encrypt(message.encode()).decode()
+        return f"Message chiffré : {encrypted}"
+    except Exception as e:
+        return f"Erreur lors du chiffrement : {str(e)}"
 
-@app.route('/decrypt_personal', methods=['GET', 'POST'])
-def decrypt_personal():
-    if request.method == 'POST':
-        token = request.form['token']
-        user_key = request.form['key']
+@app.route('/decrypt_custom')
+def decrypt_custom():
+    token = request.args.get('token')
+    user_key = request.args.get('key')
 
-        try:
-            key_bytes = base64.urlsafe_b64decode(user_key.encode())
-            f = Fernet(base64.urlsafe_b64encode(key_bytes))
-            valeur = f.decrypt(token.encode()).decode()
-            return f"Texte déchiffré : {valeur}"
-        except InvalidToken:
-            return "Erreur : Token ou clé invalide"
-        except Exception as e:
-            return f"Erreur : {str(e)}"
+    if not token or not user_key:
+        return "Erreur : veuillez fournir un token ET une clé dans l'URL.", 400
 
-    return render_template('decrypt_form.html')
-
+    try:
+        fernet = Fernet(user_key.encode())
+        decrypted = fernet.decrypt(token.encode()).decode()
+        return f"Message déchiffré : {decrypted}"
+    except Exception as e:
+        return f"Erreur lors du déchiffrement : {str(e)}"
 
                                                                                                                                                      
 if __name__ == "__main__":
