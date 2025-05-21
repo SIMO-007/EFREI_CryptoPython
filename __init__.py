@@ -17,9 +17,6 @@ def hello_world():
 key = Fernet.generate_key()
 f = Fernet(key)
 
-@app.route('/home')
-def hello_world():
-    return render_template('hello.html') #comm
 
 @app.route('/encrypt/<string:valeur>')
 def encryptage(valeur):
