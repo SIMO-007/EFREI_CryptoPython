@@ -1,11 +1,11 @@
 from cryptography.fernet import Fernet
 from flask import Flask, render_template_string, render_template, jsonify
-from flask import render_template
+from flask import render_template request
 from flask import json
 from urllib.request import urlopen
 import sqlite3
 import urllib.parse
-import request
+
 
                                                                                                                                        
 app = Flask(__name__)                                                                                                                  
